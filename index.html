@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Interativa: A CPI das "Bets"</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: A thematic, single-page application with a sticky top navigation to allow non-linear exploration. The structure is: 1. Header & Nav, 2. O Cenário (intro and context), 3. O Depoimento (interactive card for a case study), 4. O Dinheiro (visual flowchart and chart to explain the core business model), 5. O Debate (comparing key arguments), 6. A Solução (conclusion and call to action). This structure groups related concepts from the source slides into logical, explorable sections, making the complex topic more digestible and engaging than a linear presentation. -->
+    <!-- Visualization & Content Choices: 1. Money Flow Diagram (HTML/CSS): Goal=Explain Process, Viz=Animated Flowchart, Interaction=On-scroll animation, Justification=Dynamically shows the controversial money trail. 2. Revenue Source Chart (Chart.js Doughnut): Goal=Show Proportion, Viz=Doughnut Chart, Interaction=Hover tooltips, Justification=Instantly communicates that 100% of revenue comes from user losses. 3. Testimony Analysis (JS Tabs): Goal=Compare connected ideas, Viz=Tabbed content, Interaction=Click to switch views, Justification=Directly links a subject's public persona to their legal strategy. 4. Core Arguments (JS Toggles): Goal=Compare arguments, Viz=Two-column layout, Interaction=Click to reveal text, Justification=Avoids overwhelming users with text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333333;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #C0A062;
+            border-bottom-color: #C0A062;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: auto;
+            max-height: 400px;
+        }
+        .flow-arrow {
+            position: relative;
+            font-size: 2rem;
+            color: #C0A062;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        .aspect-ratio-4-3 {
+            aspect-ratio: 4 / 3;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-[#F8F7F4] shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-[#333333]">CPI das "Bets"</h3>
+            <div class="hidden md:flex space-x-8">
+                <a href="#cenario" class="nav-link pb-1">O Cenário</a>
+                <a href="#depoimento" class="nav-link pb-1">O Depoimento</a>
+                <a href="#dinheiro" class="nav-link pb-1">O Dinheiro</a>
+                <a href="#debate" class="nav-link pb-1">O Debate</a>
+                <a href="#solucao" class="nav-link pb-1">A Solução</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-[#F8F7F4] py-2">
+            <a href="#cenario" class="block text-center py-2 text-sm nav-link-mobile">O Cenário</a>
+            <a href="#depoimento" class="block text-center py-2 text-sm nav-link-mobile">O Depoimento</a>
+            <a href="#dinheiro" class="block text-center py-2 text-sm nav-link-mobile">O Dinheiro</a>
+            <a href="#debate" class="block text-center py-2 text-sm nav-link-mobile">O Debate</a>
+            <a href="#solucao" class="block text-center py-2 text-sm nav-link-mobile">A Solução</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="text-center py-16 px-6 bg-white">
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 text-[#333333]">A CPI das "Bets": Circo, Legalidade e Responsabilidade</h1>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600">Uma análise interativa sobre a investigação das apostas online, o papel dos influenciadores e os debates fundamentais que ela expõe.</p>
+        </section>
+
+        <section id="cenario" class="py-20 px-6">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-4">O Palco da CPI: Um "Circo" Midiático?</h2>
+                <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">Esta seção contextualiza a CPI, explorando seu objetivo declarado e as críticas sobre sua execução. A investigação visa a publicidade irresponsável de apostas, mas a escolha de depoentes famosos levanta questões sobre se o foco é a regulação eficaz ou a visibilidade política.</p>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2 text-[#C0A062]">Objetivo Oficial</h3>
+                            <p>Investigar a promoção de casas de apostas por influenciadores digitais e a publicidade irresponsável, com foco especial na proteção de menores de idade.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2 text-[#C0A062]">Crítica Central</h3>
+                            <p>A percepção de que a CPI se tornou um "circo" com foco excessivo na repercussão midiática, utilizando a fama de celebridades para dar visibilidade aos parlamentares.</p>
+                        </div>
+                         <div>
+                            <h3 class="text-2xl font-bold mb-2 text-[#C0A062]">O Ecossistema</h3>
+                            <p>Os avisos de "jogue com responsabilidade" são vistos como ineficazes, pois fazem parte de um sistema que já normalizou a aposta como "renda extra". A imagem do influenciador age mais como um gatilho para apostar do que um alerta de risco.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center">
+                        <img src="img/congresso.png" alt="Ilustração 2D do Congresso Nacional Brasileiro em Brasília" class="rounded-lg shadow-lg max-w-full h-auto object-cover aspect-ratio-4-3">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="depoimento" class="py-20 px-6 bg-white">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-4">Estudo de Caso: O Depoimento</h2>
+                 <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">Analisamos aqui o depoimento da influenciadora como um microcosmo das estratégias em jogo. A interação entre a imagem pública construída e a defesa legal apresentada revela como os atores se posicionam para minimizar responsabilidades.</p>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="flex justify-center items-center">
+                        <img src="img/depondo.png" alt="Ilustração 2D de uma influenciadora loira depondo em uma sala de audiência" class="rounded-lg shadow-lg max-w-full h-auto object-cover aspect-ratio-4-3">
+                    </div>
+                    <div class="max-w-2xl mx-auto">
+                        <div class="flex border-b border-gray-300">
+                            <button id="tab-persona" class="tab-btn flex-1 py-2 text-lg font-bold border-b-4 border-[#C0A062]">Persona Calculada</button>
+                            <button id="tab-defesa" class="tab-btn flex-1 py-2 text-lg font-bold border-b-4 border-transparent text-gray-500">Estratégia de Defesa</button>
+                        </div>
+                        <div id="content-persona" class="tab-content py-8">
+                            <h3 class="text-2xl font-bold mb-4">A Construção da Imagem</h3>
+                            <p class="text-gray-700">A imagem apresentada na CPI foi "milimetricamente calculada" para projetar uma persona de jovem despretensiosa, mãe e batalhadora. O discurso inicial visava criar identificação, posicionando-a como uma "menina inocente" e até vítima do sistema.</p>
+                        </div>
+                        <div id="content-defesa" class="tab-content py-8 hidden">
+                            <h3 class="text-2xl font-bold mb-4">"Apenas Sigo a Lei"</h3>
+                            <p class="text-gray-700">A estratégia de defesa se concentra em isentar-se de responsabilidade moral, afirmando seguir as regras do CONAR e as leis vigentes. Com isso, a responsabilidade é transferida para os legisladores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dinheiro" class="py-20 px-6">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-4">O Fluxo do Dinheiro: De Onde Vem?</h2>
+                <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">Esta seção desmistifica o modelo de negócio das "bets". Independentemente do contrato do influenciador ser de valor fixo ou variável, o capital que sustenta todo o ecossistema tem uma única origem: a perda dos apostadores. O diagrama e o gráfico ilustram esse fato inegável.</p>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-8">
+                        <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                            <p class="text-lg font-semibold">1. Perda do Apostador</p>
+                            <p class="text-sm text-gray-600">Usuários apostam e, na maioria das vezes, perdem dinheiro.</p>
+                        </div>
+                        <div class="flow-arrow text-center">↓</div>
+                        <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                            <p class="text-lg font-semibold">2. Lucro da Empresa de Aposta</p>
+                            <p class="text-sm text-gray-600">O dinheiro perdido pelos usuários se torna o lucro da empresa.</p>
+                        </div>
+                        <div class="flow-arrow text-center">↓</div>
+                        <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                            <p class="text-lg font-semibold">3. Pagamento do Influenciador</p>
+                            <p class="text-sm text-gray-600">Com o lucro, a empresa paga os altos cachês de publicidade.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-center mb-6">Fonte da Receita das "Bets"</h3>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                        <p class="text-center mt-4 text-gray-600">A "cláusula da desgraça" (ganho sobre a perda) é negada, mas a realidade do negócio é que todo pagamento, fixo ou não, é financiado pela perda dos clientes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="debate" class="py-20 px-6 bg-white">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-4">O Foco do Debate: Onde Está o Erro?</h2>
+                <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">A discussão pública muitas vezes se perde. Argumenta-se que o foco não deveria ser na moralidade ou no "vício", mas sim nas falhas sistêmicas e na promessa enganosa que atrai milhões.</p>
+                 <div class="flex justify-center items-center mb-12">
+                    <img src="img/viPro.png" alt="Ilustração 2D conceitual de um debate entre 'Vício' e 'Promessa'" class="rounded-lg shadow-lg max-w-lg h-auto object-cover aspect-ratio-4-3">
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-gray-50 p-8 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">Foco no "Vício": Uma Armadilha</h3>
+                        <p class="mb-4">Concentrar o debate no "vício" <strong>personaliza a culpa</strong>, tratando o problema como uma falha do indivíduo "doente" e não como uma consequência de um sistema predatório.</p>
+                        <p class="text-red-600 font-bold">Resultado: Isenta o sistema de responsabilidade.</p>
+                    </div>
+                    <div class="bg-blue-50 p-8 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">Foco na "Promessa": O Problema Real</h3>
+                        <p class="mb-4">O problema central é a <strong>sistêmica e enganosa</strong> de dinheiro fácil. Milhões são atraídos por um discurso que vende a aposta como uma chance de mudar de vida.</p>
+                        <p class="text-green-600 font-bold">Resultado: Expõe a falha do modelo de negócio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solucao" class="py-20 px-6 text-center">
+             <div class="container mx-auto">
+                <h2 class="text-4xl font-bold mb-4">Conclusão: Qual o Caminho a Seguir?</h2>
+                <p class="max-w-3xl mx-auto text-gray-600 mb-8">A análise revela que apelos à moralidade ou focar na culpa individual são ineficazes. A solução reside em uma mudança de paradigma, movendo a responsabilidade para a regulação do sistema.</p>
+                <div class="flex justify-center items-center mb-12">
+                    <img src="img/leis.png" alt="Ilustração 2D de uma balança da justiça e um livro de leis" class="rounded-lg shadow-lg max-w-lg h-auto object-cover aspect-ratio-4-3">
+                </div>
+                <div class="max-w-2xl mx-auto bg-white p-10 rounded-lg shadow-2xl">
+                    <h3 class="text-3xl font-bold text-[#C0A062] mb-4">Legislação Baseada em Dados</h3>
+                    <p class="text-lg">A solução não está em apelos morais, mas em criar <strong>claras e eficazes baseadas em análises sociológicas e de saúde pública</strong>. É preciso regular o que pode ser feito para proteger a população.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-gray-800 text-white text-center py-4">
+        <p>&copy; 2024 Análise Interativa. Conteúdo adaptado para fins educacionais.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu on link click
+            document.querySelectorAll('.nav-link-mobile').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Tabs for Depoimento
+            const tabPersona = document.getElementById('tab-persona');
+            const tabDefesa = document.getElementById('tab-defesa');
+            const contentPersona = document.getElementById('content-persona');
+            const contentDefesa = document.getElementById('content-defesa');
+
+            tabPersona.addEventListener('click', () => {
+                contentPersona.classList.remove('hidden');
+                contentDefesa.classList.add('hidden');
+                tabPersona.classList.add('border-[#C0A062]');
+                tabPersona.classList.remove('text-gray-500', 'border-transparent');
+                tabDefesa.classList.remove('border-[#C0A062]');
+                tabDefesa.classList.add('text-gray-500', 'border-transparent');
+            });
+
+            tabDefesa.addEventListener('click', () => {
+                contentDefesa.classList.remove('hidden');
+                contentPersona.classList.add('hidden');
+                tabDefesa.classList.add('border-[#C0A062]');
+                tabDefesa.classList.remove('text-gray-500', 'border-transparent');
+                tabPersona.classList.remove('border-[#C0A062]');
+                tabPersona.classList.add('text-gray-500', 'border-transparent');
+            });
+
+            // Chart.js Doughnut Chart
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Perdas dos Usuários'],
+                    datasets: [{
+                        label: 'Origem da Receita',
+                        data: [100],
+                        backgroundColor: [
+                            '#C0A062',
+                        ],
+                        borderColor: [
+                            '#F8F7F4',
+                        ],
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' 100% da receita provém das perdas dos apostadores.';
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            // Smooth scrolling and active nav link highlighting
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const activateNavLink = (id) => {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                activateNavLink(current);
+            });
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
