@@ -9,10 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Calm Neutrals -->
-    <!-- Application Structure Plan: A thematic, single-page application with a sticky top navigation to allow non-linear exploration. The structure is: 1. Header & Nav, 2. O Cenário (intro and context), 3. O Depoimento (interactive card for a case study), 4. O Dinheiro (visual flowchart and chart to explain the core business model), 5. O Debate (comparing key arguments), 6. A Solução (conclusion and call to action). This structure groups related concepts from the source slides into logical, explorable sections, making the complex topic more digestible and engaging than a linear presentation. -->
-    <!-- Visualization & Content Choices: 1. Money Flow Diagram (HTML/CSS): Goal=Explain Process, Viz=Animated Flowchart, Interaction=On-scroll animation, Justification=Dynamically shows the controversial money trail. 2. Revenue Source Chart (Chart.js Doughnut): Goal=Show Proportion, Viz=Doughnut Chart, Interaction=Hover tooltips, Justification=Instantly communicates that 100% of revenue comes from user losses. 3. Testimony Analysis (JS Tabs): Goal=Compare connected ideas, Viz=Tabbed content, Interaction=Click to switch views, Justification=Directly links a subject's public persona to their legal strategy. 4. Core Arguments (JS Toggles): Goal=Compare arguments, Viz=Two-column layout, Interaction=Click to reveal text, Justification=Avoids overwhelming users with text. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -123,21 +119,21 @@
         <section id="depoimento" class="py-20 px-6 bg-white">
             <div class="container mx-auto">
                 <h2 class="text-4xl font-bold text-center mb-4">Estudo de Caso: O Depoimento</h2>
-                 <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">Analisamos aqui o depoimento da influenciadora como um microcosmo das estratégias em jogo. A interação entre a imagem pública construída e a defesa legal apresentada revela como os atores se posicionam para minimizar responsabilidades.</p>
+                   <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">Analisamos aqui o depoimento da influenciadora como um microcosmo das estratégias em jogo. A interação entre a imagem pública construída e a defesa legal apresentada revela como os atores se posicionam para minimizar responsabilidades.</p>
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div class="flex justify-center items-center">
                         <img src="img/depondo2.png" alt="Ilustração 2D de uma influenciadora loira depondo em uma sala de audiência" class="rounded-lg shadow-lg max-w-full h-auto object-cover aspect-ratio-4-3">
                     </div>
                     <div class="max-w-2xl mx-auto">
                         <div class="flex border-b border-gray-300">
-                            <button id="tab-persona" class="tab-btn flex-1 py-2 text-lg font-bold border-b-4 border-[#C0A062]">Persona Calculada</button>
-                            <button id="tab-defesa" class="tab-btn flex-1 py-2 text-lg font-bold border-b-4 border-transparent text-gray-500">Estratégia de Defesa</button>
+                            <button id="tab-persona" class="tab-btn flex-1 py-2 text-lg font-bold border-b-4 border-transparent text-gray-500">Persona Calculada</button>
+                            <button id="tab-defesa" class="tab-btn flex-1 py-2 text-lg font-bold border-b-4 border-[#C0A062]">Estratégia de Defesa</button>
                         </div>
-                        <div id="content-persona" class="tab-content py-8">
+                        <div id="content-persona" class="tab-content py-8 hidden">
                             <h3 class="text-2xl font-bold mb-4">A Construção da Imagem</h3>
                             <p class="text-gray-700">A imagem apresentada na CPI foi "milimetricamente calculada" para projetar uma persona de jovem despretensiosa, mãe e batalhadora. O discurso inicial visava criar identificação, posicionando-a como uma "menina inocente" e até vítima do sistema.</p>
                         </div>
-                        <div id="content-defesa" class="tab-content py-8 hidden">
+                        <div id="content-defesa" class="tab-content py-8">
                             <h3 class="text-2xl font-bold mb-4">"Apenas Sigo a Lei"</h3>
                             <p class="text-gray-700">A estratégia de defesa se concentra em isentar-se de responsabilidade moral, afirmando seguir as regras do CONAR e as leis vigentes. Com isso, a responsabilidade é transferida para os legisladores.</p>
                         </div>
@@ -182,7 +178,7 @@
             <div class="container mx-auto">
                 <h2 class="text-4xl font-bold text-center mb-4">O Foco do Debate: Onde Está o Erro ?</h2>
                 <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">A discussão pública muitas vezes se perde. Argumenta-se que o foco não deveria ser na moralidade ou no "vício", mas sim nas falhas sistêmicas e na promessa enganosa que atrai milhões.</p>
-                 <div class="flex justify-center items-center mb-12">
+                   <div class="flex justify-center items-center mb-12">
                     <img src="img/viPro2.png" alt="Ilustração 2D conceitual de um debate entre 'Vício' e 'Promessa'" class="rounded-lg shadow-lg max-w-lg h-auto object-cover aspect-ratio-4-3">
                 </div>
                 <div class="grid md:grid-cols-2 gap-8">
@@ -201,7 +197,7 @@
         </section>
 
         <section id="solucao" class="py-20 px-6 text-center">
-             <div class="container mx-auto">
+               <div class="container mx-auto">
                 <h2 class="text-4xl font-bold mb-4">Conclusão: Qual o Caminho a Seguir?</h2>
                 <p class="max-w-3xl mx-auto text-gray-600 mb-8">A análise revela que apelos à moralidade ou focar na culpa individual são ineficazes. A solução reside em uma mudança de paradigma, movendo a responsabilidade para a regulação do sistema.</p>
                 <div class="flex justify-center items-center mb-12">
@@ -240,6 +236,14 @@
             const tabDefesa = document.getElementById('tab-defesa');
             const contentPersona = document.getElementById('content-persona');
             const contentDefesa = document.getElementById('content-defesa');
+
+            // Set "Estratégia de Defesa" as active on load
+            contentPersona.classList.add('hidden');
+            contentDefesa.classList.remove('hidden');
+            tabPersona.classList.remove('border-[#C0A062]');
+            tabPersona.classList.add('text-gray-500', 'border-transparent');
+            tabDefesa.classList.add('border-[#C0A062]');
+            tabDefesa.classList.remove('text-gray-500', 'border-transparent');
 
             tabPersona.addEventListener('click', () => {
                 contentPersona.classList.remove('hidden');
